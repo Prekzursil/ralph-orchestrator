@@ -21,6 +21,11 @@
     "clean": "npm run clean --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present"
   },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": ">=0.25.0 <0.26.0"
+    }
+  },
   "engines": {
     "node": ">=22.0.0"
   },
