@@ -1,7 +1,8 @@
 /// <reference types="vitest" />
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
-import { defineConfig } from "vite";
+// vitest 5: the test key is only typed on the config factory from vitest/config.
+import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 var __dirname = dirname(fileURLToPath(import.meta.url));

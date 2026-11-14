@@ -215,6 +215,8 @@ mod tests {
         let event = Event::new("review.done", "Review complete");
         let recipients = bus.publish(event);
 
+        // clippy 1.100 assert_is_empty: keep the explicit predicate form.
+        #[allow(clippy::assert_is_empty)]
         assert!(recipients.is_empty());
     }
 
