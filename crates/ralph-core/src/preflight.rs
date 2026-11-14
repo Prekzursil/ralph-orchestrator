@@ -352,22 +352,20 @@ fn resolve_hook_command(
 }
 
 fn is_executable_file(path: &Path) -> bool {
-    if !path.is_file() {
-        return false;
-    }
+    path.is_file() && {
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
 
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
+            std::fs::metadata(path)
+                .map(|metadata| metadata.permissions().mode() & 0o111 != 0)
+                .unwrap_or(false)
+        }
 
-        std::fs::metadata(path)
-            .map(|metadata| metadata.permissions().mode() & 0o111 != 0)
-            .unwrap_or(false)
-    }
-
-    #[cfg(not(unix))]
-    {
-        true
+        #[cfg(not(unix))]
+        {
+            true
+        }
     }
 }
 
