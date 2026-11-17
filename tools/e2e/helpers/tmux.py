@@ -3,7 +3,6 @@
 import asyncio
 import subprocess
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass

@@ -5,7 +5,7 @@
  * Focuses on backlog delivery when subscribing to completed tasks.
  */
 
-import { test, describe, beforeEach, afterEach, mock, Mock } from "node:test";
+import { test, describe, afterEach, mock, Mock } from "node:test";
 import assert from "node:assert";
 import { LogBroadcaster, resetLogBroadcaster } from "./LogBroadcaster.js";
 import { TaskLogRepository } from "../repositories/TaskLogRepository.js";

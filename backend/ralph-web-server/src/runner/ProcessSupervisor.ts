@@ -47,9 +47,16 @@ export class ProcessSupervisor {
    * Spawn a detached ralph process
    */
   spawn(taskId: string, prompt: string, args: string[], cwd: string, command: string = "ralph"): ProcessHandle {
+    // taskId becomes a directory name: only a safe identifier is accepted,
+    // so no traversal/predictable-temp construction is possible
+    // (js/insecure-temporary-file).
+    if (!/^[A-Za-z0-9_-]{1,64}$/.test(taskId)) {
+      throw new Error(`Invalid taskId: ${taskId}`);
+    }
+
     const taskDir = path.join(this.runDir, taskId);
 
-    // Create task directory
+    // Create task directory (idempotent mkdir -p; no existsSync TOCTOU)
     fs.mkdirSync(taskDir, { recursive: true });
 
     // Write prompt.txt (AC-3.2)
@@ -100,10 +107,6 @@ export class ProcessSupervisor {
     // Monitor process exit (AC-3.6)
     const startTime = Date.now();
     child.on("exit", (code, signal) => {
-      // Check if directory still exists (may have been cleaned up)
-      if (!fs.existsSync(taskDir)) {
-        return;
-      }
 
       const exitStatus: ProcessStatus = {
         state: code === 0 ? "completed" : "failed",
@@ -113,7 +116,14 @@ export class ProcessSupervisor {
         signal: signal ?? undefined,
         durationMs: Date.now() - startTime,
       };
-      fs.writeFileSync(path.join(taskDir, "status.json"), JSON.stringify(exitStatus, null, 2));
+      // The task dir may already have been cleaned up when the process
+      // exits (tests and supervisors remove it) - the old existsSync guard
+      // had exactly this TOCTOU; a tolerant write handles it race-free.
+      try {
+        fs.writeFileSync(path.join(taskDir, "status.json"), JSON.stringify(exitStatus, null, 2));
+      } catch {
+        // task directory already removed - nothing to record
+      }
     });
 
     return {

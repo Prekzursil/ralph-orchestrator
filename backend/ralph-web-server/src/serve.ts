@@ -8,7 +8,7 @@
 import path from "path";
 import { startServer, configureLogBroadcaster } from "./api";
 import { initializeDatabase, getDatabase } from "./db/connection";
-import { TaskQueueService, EventBus, Dispatcher } from "./queue";
+import { EventBus, Dispatcher } from "./queue";
 import { PersistentTaskQueueService } from "./queue/PersistentTaskQueueService";
 import { createRalphTaskHandler } from "./runner/RalphTaskHandler";
 import { createTestLogTaskHandler } from "./runner/TestLogTaskHandler";

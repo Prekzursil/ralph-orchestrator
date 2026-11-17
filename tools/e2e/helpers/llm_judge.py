@@ -1,6 +1,5 @@
 """LLM-as-judge validation using Claude Agent SDK."""
 
-import asyncio
 import json
 from dataclasses import dataclass, field
 from pathlib import Path

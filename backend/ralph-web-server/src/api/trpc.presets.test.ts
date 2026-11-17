@@ -8,7 +8,7 @@
  * 3. Database collections (created via Builder tool)
  */
 
-import { test, describe, mock } from "node:test";
+import {test, describe} from "node:test";
 import assert from "node:assert";
 import { appRouter, createContext } from "./trpc";
 import { initializeDatabase, getDatabase } from "../db/connection";

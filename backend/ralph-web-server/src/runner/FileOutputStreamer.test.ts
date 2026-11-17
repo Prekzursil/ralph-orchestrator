@@ -10,7 +10,7 @@ import * as os from "os";
 import { FileOutputStreamer } from "./FileOutputStreamer";
 
 test("FileOutputStreamer.stream watches log files and emits lines", async () => {
-  const testDir = path.join(os.tmpdir(), `streamer-test-${Date.now()}`);
+  const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "streamer-test-"));
   fs.mkdirSync(testDir, { recursive: true });
 
   const streamer = new FileOutputStreamer();
@@ -47,7 +47,7 @@ test("FileOutputStreamer.stream watches log files and emits lines", async () => 
 });
 
 test("FileOutputStreamer.readAll returns all content", () => {
-  const testDir = path.join(os.tmpdir(), `streamer-test-${Date.now()}`);
+  const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "streamer-test-"));
   fs.mkdirSync(testDir, { recursive: true });
 
   // Write test files
@@ -65,7 +65,7 @@ test("FileOutputStreamer.readAll returns all content", () => {
 });
 
 test("FileOutputStreamer.readFrom returns content from position", () => {
-  const testDir = path.join(os.tmpdir(), `streamer-test-${Date.now()}`);
+  const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "streamer-test-"));
   fs.mkdirSync(testDir, { recursive: true });
 
   // Write test file
@@ -85,7 +85,7 @@ test("FileOutputStreamer.readFrom returns content from position", () => {
 });
 
 test("FileOutputStreamer.stop removes watchers", async () => {
-  const testDir = path.join(os.tmpdir(), `streamer-test-${Date.now()}`);
+  const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "streamer-test-"));
   fs.mkdirSync(testDir, { recursive: true });
 
   const streamer = new FileOutputStreamer();
@@ -125,7 +125,7 @@ test("FileOutputStreamer.stop removes watchers", async () => {
 });
 
 test("FileOutputStreamer handles missing log files", () => {
-  const testDir = path.join(os.tmpdir(), `streamer-test-${Date.now()}`);
+  const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "streamer-test-"));
   fs.mkdirSync(testDir, { recursive: true });
 
   const streamer = new FileOutputStreamer();

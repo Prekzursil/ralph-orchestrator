@@ -1,9 +1,7 @@
 """Pytest configuration and fixtures for E2E tests."""
 
 import asyncio
-import os
 import uuid
-import tempfile
 from pathlib import Path
 from datetime import datetime
 from typing import AsyncGenerator
@@ -56,10 +54,11 @@ def ralph_binary(project_root: Path) -> Path:
 
     if release_path.exists():
         return release_path
-    elif debug_path.exists():
+    if debug_path.exists():
         return debug_path
-    else:
-        pytest.skip("Ralph binary not found. Run 'cargo build' first.")
+    # No binary: skip the session (pytest.skip never returns normally).
+    pytest.skip("Ralph binary not found. Run 'cargo build' first.")
+    raise AssertionError("unreachable: pytest.skip is NoReturn")
 
 
 @pytest.fixture(scope="session")

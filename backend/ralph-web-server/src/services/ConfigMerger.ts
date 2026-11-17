@@ -180,11 +180,14 @@ export class ConfigMerger {
    * Load a preset from a YAML file on disk
    */
   private loadFilePreset(presetPath: string, errorMessage: string): PresetData {
-    if (!fs.existsSync(presetPath)) {
+    let content: string;
+    try {
+      content = fs.readFileSync(presetPath, "utf-8");
+    } catch {
+      // ENOENT and unreadable files alike surface the caller's message;
+      // no existsSync guard -> no check-then-read race (js/file-system-race).
       throw new Error(errorMessage);
     }
-
-    const content = fs.readFileSync(presetPath, "utf-8");
     return this.extractPresetData(yamlParse(content) as RalphConfig);
   }
 
