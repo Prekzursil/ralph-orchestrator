@@ -54,10 +54,9 @@ export class FileOutputStreamer {
     callback: LineCallback,
     fromPosition?: StreamPosition
   ): WatchState | undefined {
-    // Create file if it doesn't exist
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, "");
-    }
+    // Create-or-open atomically: 'a' never truncates an existing file and
+    // needs no existsSync guard (js/file-system-race, js/insecure-temporary-file).
+    fs.closeSync(fs.openSync(filePath, "a"));
 
     const state: WatchState = {
       watcher: null as any, // Will be set below

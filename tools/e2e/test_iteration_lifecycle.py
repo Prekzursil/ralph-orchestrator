@@ -13,7 +13,6 @@ Per AGENTS.md Tenet #2: Backpressure Over Prescription (LLM-as-judge)
 
 import asyncio
 import json
-import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Callable
@@ -113,7 +112,7 @@ async def test_iteration_counter_increments(
             scenario_dir = iteration_evidence_dir / "scenario_counter"
             scenario_dir.mkdir(parents=True, exist_ok=True)
 
-            capture_result = await iteration_freeze_capture.capture_buffer(
+            await iteration_freeze_capture.capture_buffer(
                 capture.content,
                 name_prefix=f"iter_{target_iter}",
                 formats=("svg", "text"),
@@ -216,7 +215,7 @@ async def test_max_iterations_exit_code(
     scenario_dir = iteration_evidence_dir / "scenario_max_iterations"
     scenario_dir.mkdir(parents=True, exist_ok=True)
 
-    capture_result = await iteration_freeze_capture.capture_buffer(
+    await iteration_freeze_capture.capture_buffer(
         final_content,
         name_prefix="final_capture",
         formats=("svg", "text"),
@@ -313,7 +312,7 @@ async def test_completion_dual_confirmation(
     scenario_dir = iteration_evidence_dir / "scenario_completion"
     scenario_dir.mkdir(parents=True, exist_ok=True)
 
-    capture_result = await iteration_freeze_capture.capture_buffer(
+    await iteration_freeze_capture.capture_buffer(
         final_content,
         name_prefix="completion_capture",
         formats=("svg", "text"),
@@ -496,7 +495,6 @@ async def test_iteration_capture_pattern_matching():
 
     # Test pattern matching via IterationState.from_content()
     # TUI header format is [iter N/M] where N is current and M is total
-    ITER_PATTERN = re.compile(r'\[iter\s+(\d+)(?:/\d+)?\]')
 
     content_samples = [
         ("[iter 1/3] 00:05 | 🔨 Build | ▶ auto", 1, "00:05", "auto"),

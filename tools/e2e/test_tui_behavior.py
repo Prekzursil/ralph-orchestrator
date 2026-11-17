@@ -522,5 +522,4 @@ async def test_tui_new_iteration_alert(
 
     # When at latest, should be in LIVE mode, not REVIEW
     live_indicators = ["LIVE", "[>", "▶"]
-    has_live_indicator = any(ind in content_at_latest for ind in live_indicators)
     # This is informational - the main test is the alert detection above

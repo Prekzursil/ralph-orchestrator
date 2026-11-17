@@ -6,7 +6,7 @@
  * while replacing only the hats and events sections from the preset.
  */
 
-import { test, describe, beforeEach, afterEach } from "node:test";
+import {test, describe, beforeEach, afterEach} from "node:test";
 import assert from "node:assert";
 import * as path from "path";
 import * as fs from "fs";

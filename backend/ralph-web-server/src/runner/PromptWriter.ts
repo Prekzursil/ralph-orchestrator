@@ -66,7 +66,9 @@ export class PromptWriter {
   private cleanupRegistered: boolean = false;
 
   constructor(options: PromptWriterOptions = {}) {
-    this.tempDir = options.tempDir ?? os.tmpdir();
+    // Private, unpredictable temp dir (mkdtemp) instead of the shared,
+    // predictable os.tmpdir() root (js/insecure-temporary-file).
+    this.tempDir = options.tempDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "ralph-prompt-"));
     this.filePrefix = options.filePrefix ?? "ralph-prompt-";
     this.autoCleanup = options.autoCleanup ?? true;
     this.settingsService = options.settingsService;
@@ -153,9 +155,7 @@ export class PromptWriter {
     const filePath = this.generateFilePath();
 
     // Ensure temp directory exists
-    if (!fs.existsSync(this.tempDir)) {
-      fs.mkdirSync(this.tempDir, { recursive: true });
-    }
+    fs.mkdirSync(this.tempDir, { recursive: true });
 
     // Build content with context prefix
     const contextPrefix = this.buildContextPrefix();
@@ -218,9 +218,7 @@ export class PromptWriter {
     const filePath = this.generateFilePath();
 
     // Ensure temp directory exists
-    if (!fs.existsSync(this.tempDir)) {
-      fs.mkdirSync(this.tempDir, { recursive: true });
-    }
+    fs.mkdirSync(this.tempDir, { recursive: true });
 
     // Write the file without context prefix
     fs.writeFileSync(filePath, content, "utf-8");

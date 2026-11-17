@@ -52,7 +52,6 @@ describe("Dispatcher", () => {
     const dispatcher = new Dispatcher(queue, eventBus, { pollIntervalMs: 10 });
 
     let resolveHandler: () => void;
-    const handlerPromise = new Promise<void>((resolve) => {
       resolveHandler = resolve;
     });
 

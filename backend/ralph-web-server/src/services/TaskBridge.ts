@@ -456,10 +456,13 @@ export class TaskBridge {
           } else if (this.collectionService) {
             const yamlContent = this.collectionService.exportToYaml(preset);
             if (yamlContent) {
-              const tempDir = path.join(this.defaultCwd, ".ralph", "temp");
-              if (!fs.existsSync(tempDir)) {
-                fs.mkdirSync(tempDir, { recursive: true });
+              // preset is documented as a UUID; enforcing that keeps it from
+              // ever acting as a path fragment (js/path-injection).
+              if (!/^[0-9a-fA-F-]{36}$/.test(preset)) {
+                throw new Error(`Invalid collection preset id: ${preset}`);
               }
+              const tempDir = path.join(this.defaultCwd, ".ralph", "temp");
+              fs.mkdirSync(tempDir, { recursive: true });
               const tempPath = path.join(tempDir, `collection-${preset}.yml`);
               fs.writeFileSync(tempPath, yamlContent, "utf-8");
               args.push("-c", tempPath);

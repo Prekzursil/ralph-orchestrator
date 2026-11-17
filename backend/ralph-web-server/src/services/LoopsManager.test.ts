@@ -8,7 +8,7 @@
  * 3. Integration with tRPC router
  */
 
-import { test, mock, describe } from "node:test";
+import {test, describe} from "node:test";
 import assert from "node:assert";
 import { LoopsManager } from "./LoopsManager";
 

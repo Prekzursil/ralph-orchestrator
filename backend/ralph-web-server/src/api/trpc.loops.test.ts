@@ -5,7 +5,7 @@
  * the rust merge_button_state API to the frontend.
  */
 
-import { test, describe, mock } from "node:test";
+import {test, describe} from "node:test";
 import assert from "node:assert";
 import { loopsRouter, createContext } from "./trpc";
 import { initializeDatabase, getDatabase } from "../db/connection";

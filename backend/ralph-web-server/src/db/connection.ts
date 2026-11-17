@@ -72,8 +72,6 @@ function getDefaultDbPath(): string {
  * This is a convenience function for development/testing.
  */
 export function initializeDatabase(database?: BetterSQLite3Database<typeof schema>): void {
-  const targetDb = database ?? getDatabase();
-
   // Get raw SQLite connection for table creation
   if (!sqlite) {
     throw new Error("Database not initialized. Call getDatabase() first.");
