@@ -116,7 +116,14 @@ export class ProcessSupervisor {
         signal: signal ?? undefined,
         durationMs: Date.now() - startTime,
       };
-      fs.writeFileSync(path.join(taskDir, "status.json"), JSON.stringify(exitStatus, null, 2));
+      // The task dir may already have been cleaned up when the process
+      // exits (tests and supervisors remove it) - the old existsSync guard
+      // had exactly this TOCTOU; a tolerant write handles it race-free.
+      try {
+        fs.writeFileSync(path.join(taskDir, "status.json"), JSON.stringify(exitStatus, null, 2));
+      } catch {
+        // task directory already removed - nothing to record
+      }
     });
 
     return {
