@@ -169,12 +169,7 @@ fn print_check_line(check: &CheckResult, name_width: usize, use_colors: bool) {
 
     let status_padded = format!("{status_text:<4}");
     let status_display = if use_colors {
-        format!(
-            "{}{status}{}",
-            color,
-            colors::RESET,
-            status = status_padded
-        )
+        format!("{}{status}{}", color, colors::RESET, status = status_padded)
     } else {
         status_padded
     };
