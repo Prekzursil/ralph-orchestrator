@@ -66,7 +66,15 @@ export class FileOutputStreamer {
 
     // Read initial content if resuming from position
     if (state.position.byteOffset > 0) {
-      const content = fs.readFileSync(filePath, "utf-8");
+      // Tolerant read: the file can be rotated/truncated between the atomic
+      // create above and this read (js/file-system-race) - a vanished or
+      // shortened file simply resumes from empty.
+      let content = "";
+      try {
+        content = fs.readFileSync(filePath, "utf-8");
+      } catch {
+        // rotated away mid-tail: nothing to resume from
+      }
       if (content.length > state.position.byteOffset) {
         state.buffer = content.slice(state.position.byteOffset);
       }
