@@ -13,7 +13,6 @@ Per AGENTS.md Tenet #2: Backpressure Over Prescription (LLM-as-judge)
 
 import asyncio
 import json
-from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
@@ -26,7 +25,6 @@ from .helpers import (
     JudgeResult,
     IterationCapture,
     IterationState,
-    CaptureSequenceResult,
 )
 from .helpers.llm_judge import (
     ITERATION_COUNTER_CRITERIA,

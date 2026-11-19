@@ -518,8 +518,7 @@ async def test_tui_new_iteration_alert(
     await tmux_session.send_keys("l", enter=False)
     await asyncio.sleep(0.3)
 
-    content_at_latest = await tmux_session.capture_pane()
-
-    # When at latest, should be in LIVE mode, not REVIEW
-    live_indicators = ["LIVE", "[>", "▶"]
-    # This is informational - the main test is the alert detection above
+    # When at latest the pane is in LIVE mode, not REVIEW; the main test
+    # above is the alert detection, so no further assertions are needed
+    # here (unused capture/indicator locals removed for CodeQL
+    # py/unused-local-variable).

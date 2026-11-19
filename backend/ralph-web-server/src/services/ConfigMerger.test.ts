@@ -12,7 +12,7 @@ import * as path from "path";
 import * as fs from "fs";
 import * as os from "os";
 import { parse as yamlParse, stringify as yamlStringify } from "yaml";
-import { ConfigMerger, MergeResult } from "./ConfigMerger";
+import { ConfigMerger } from "./ConfigMerger";
 import { CollectionService } from "./CollectionService";
 import { CollectionRepository } from "../repositories/CollectionRepository";
 import { initializeTestDatabase, getTestDatabase, closeTestDatabase } from "../db/testUtils";

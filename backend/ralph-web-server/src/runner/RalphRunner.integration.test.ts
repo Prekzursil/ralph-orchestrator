@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert";
 import { RalphRunner } from "./RalphRunner";
 import { ProcessSupervisor } from "./ProcessSupervisor";
-import { RunnerState, isTerminalRunnerState } from "./RunnerState";
+import { isTerminalRunnerState } from "./RunnerState";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";

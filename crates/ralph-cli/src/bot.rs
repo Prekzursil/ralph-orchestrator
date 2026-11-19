@@ -207,6 +207,14 @@ async fn onboard_telegram(args: OnboardArgs, use_colors: bool) -> Result<()> {
         }
     };
 
+    // NOTE (rust/cleartext-logging reviews): the Telegram bot USERNAME
+    // printed below and in the onboarding/troubleshooting messages is a
+    // PUBLIC identifier (it is how anyone finds the bot on t.me); it is not
+    // a credential. The token itself is never printed. CodeQL flags any
+    // network-derived value flowing into println!; displaying the handle is
+    // the entire point of these prompts, so these prints are intentional.
+    // Reviewed 2026-11-19.
+
     // Step 3: Get chat_id
     let chat_id = if let Some(id) = args.chat_id {
         id

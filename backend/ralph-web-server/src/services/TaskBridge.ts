@@ -23,6 +23,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import * as crypto from "crypto";
 import { execSync } from "child_process";
 import stripAnsi from "strip-ansi";
 import { TaskRepository } from "../repositories";
@@ -463,7 +464,13 @@ export class TaskBridge {
               }
               const tempDir = path.join(this.defaultCwd, ".ralph", "temp");
               fs.mkdirSync(tempDir, { recursive: true });
-              const tempPath = path.join(tempDir, `collection-${preset}.yml`);
+              // The temp filename is server-generated (randomUUID): the
+              // user-supplied preset id never becomes a path fragment
+              // (js/path-injection). The preset id travels inside the YAML.
+              const tempPath = path.join(
+                tempDir,
+                `collection-${crypto.randomUUID()}.yml`
+              );
               fs.writeFileSync(tempPath, yamlContent, "utf-8");
               args.push("-c", tempPath);
               configResolved = true;
