@@ -18,7 +18,7 @@
  */
 
 import { TaskQueueService, QueuedTask } from "./TaskQueueService";
-import { EventBus, Event } from "./EventBus";
+import { EventBus } from "./EventBus";
 import { TaskState } from "./TaskState";
 
 /**

@@ -157,14 +157,18 @@ export class ConfigMerger {
   private resolvePreset(preset: string): PresetData {
     if (preset.startsWith("builtin:")) {
       return this.loadFilePreset(
-        path.join(this.presetsDir, `${preset.slice(8)}.yml`),
+        this.presetFileIn(this.presetsDir, preset.slice(8), preset),
         `Preset not found: ${preset}`
       );
     }
 
     if (preset.startsWith("directory:")) {
       return this.loadFilePreset(
-        path.join(this.directoryPresetsRoot, ".ralph", "hats", `${preset.slice(10)}.yml`),
+        this.presetFileIn(
+          path.join(this.directoryPresetsRoot, ".ralph", "hats"),
+          preset.slice(10),
+          preset
+        ),
         `Preset not found: ${preset}`
       );
     }
@@ -179,6 +183,23 @@ export class ConfigMerger {
   /**
    * Load a preset from a YAML file on disk
    */
+  /**
+   * Validate a user-supplied preset name segment and return a path that is
+   * provably inside `dir` (js/path-injection: the segment is charset-bound
+   * and the resolved path is containment-checked before any read).
+   */
+  private presetFileIn(dir: string, name: string, preset: string): string {
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(name) || name.includes("..")) {
+      throw new Error(`Invalid preset name: ${preset}`);
+    }
+    const root = path.resolve(dir);
+    const resolved = path.resolve(root, `${name}.yml`);
+    if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+      throw new Error(`Preset escapes presets dir: ${preset}`);
+    }
+    return resolved;
+  }
+
   private loadFilePreset(presetPath: string, errorMessage: string): PresetData {
     let content: string;
     try {

@@ -43,7 +43,7 @@ export interface ServerOptions {
  * Create and configure a Fastify server with TRPC
  */
 export async function createServer(options: ServerOptions = {}): Promise<FastifyInstance> {
-  const { port = 3000, host = "0.0.0.0", db = getDatabase(), logger = true, taskBridge, loopsManager, planningService } = options;
+  const { db = getDatabase(), logger = true, taskBridge, loopsManager, planningService } = options;
 
   const server = Fastify({ logger });
 

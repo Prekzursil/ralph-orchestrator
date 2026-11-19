@@ -5,7 +5,10 @@ import * as path from "path";
 import * as os from "os";
 import { ProcessSupervisor } from "./ProcessSupervisor";
 
-const testRunDir = path.join(os.tmpdir(), "ralph-test-runs");
+// mkdtemp gives a unique, unpredictable directory: CodeQL's
+// js/insecure-temporary-file taint-tracks a predictable os.tmpdir() root
+// supplied here into every ProcessSupervisor file write.
+const testRunDir = fs.mkdtempSync(path.join(os.tmpdir(), "ralph-test-runs-"));
 
 test("ProcessSupervisor.spawn creates task directory and PID file", () => {
   const supervisor = new ProcessSupervisor({ runDir: testRunDir });

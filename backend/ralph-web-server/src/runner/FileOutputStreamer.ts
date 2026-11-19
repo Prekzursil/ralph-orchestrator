@@ -56,7 +56,10 @@ export class FileOutputStreamer {
   ): WatchState | undefined {
     // Create-or-open atomically: 'a' never truncates an existing file and
     // needs no existsSync guard (js/file-system-race, js/insecure-temporary-file).
-    fs.closeSync(fs.openSync(filePath, "a"));
+    // The descriptor is kept open so the resume read below goes through the
+    // SAME inode instead of re-resolving the path (rotation/truncation then
+    // cannot swap the file under us between create and read).
+    const fd = fs.openSync(filePath, "a");
 
     const state: WatchState = {
       watcher: null as any, // Will be set below
@@ -66,19 +69,22 @@ export class FileOutputStreamer {
 
     // Read initial content if resuming from position
     if (state.position.byteOffset > 0) {
-      // Tolerant read: the file can be rotated/truncated between the atomic
-      // create above and this read (js/file-system-race) - a vanished or
-      // shortened file simply resumes from empty.
-      let content = "";
+      // fd-based tolerant read: fstat/read on the open descriptor cannot
+      // race with a path-level rotate or truncate (js/file-system-race).
       try {
-        content = fs.readFileSync(filePath, "utf-8");
+        const size = fs.fstatSync(fd).size;
+        const buf = Buffer.alloc(size);
+        fs.readSync(fd, buf, 0, size, 0);
+        const content = buf.toString("utf-8");
+        if (content.length > state.position.byteOffset) {
+          state.buffer = content.slice(state.position.byteOffset);
+        }
       } catch {
         // rotated away mid-tail: nothing to resume from
       }
-      if (content.length > state.position.byteOffset) {
-        state.buffer = content.slice(state.position.byteOffset);
-      }
     }
+
+    fs.closeSync(fd);
 
     state.watcher = fs.watch(filePath, (eventType) => {
       if (eventType === "change") {

@@ -1,6 +1,5 @@
 """Pytest configuration and fixtures for E2E tests."""
 
-import asyncio
 import uuid
 from pathlib import Path
 from datetime import datetime

@@ -22,7 +22,7 @@
  * - Configurable command and arguments
  */
 
-import { spawn, ChildProcess, SpawnOptions } from "child_process";
+import { ChildProcess } from "child_process";
 import { EventEmitter } from "events";
 import { RunnerState, isTerminalRunnerState, isValidRunnerTransition } from "./RunnerState";
 import { LogStream, LogEntry, LogCallback } from "./LogStream";
